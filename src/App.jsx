@@ -1,21 +1,21 @@
 import React, { Component } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import RegistroUsuario from "./componentes/registroUsuario.jsx";
-import LoginUsuario from "./componentes/loginUsuario.jsx";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import RegistroUsuario from "./componentes/RegistroUsuario";
+import LoginUsuario from "./componentes/LoginUsuario";
+import Home from "./componentes/home";
 
 class App extends Component {
   render() {
     return (
-      <BrowserRouter>
-        <div>
-          <Routes>
-            <Route path="/login" element={<LoginUsuario />} />
-            <Route path="/registro" element={<RegistroUsuario />} />
-            {/* Redirige cualquier otra ruta a /login */}
-            <Route path="*" element={<Navigate to="/login" />} />
-          </Routes>
-        </div>
-      </BrowserRouter>
+      <Router>
+        <Routes>
+          <Route path="/home" element={<Home />} />
+          <Route path="/login" element={<LoginUsuario />} />
+          <Route path="/registro" element={<RegistroUsuario />} />
+          {/* Ruta por defecto: redirige todo lo no definido a /login */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </Router>
     );
   }
 }
