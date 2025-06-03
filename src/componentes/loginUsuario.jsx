@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import axios from "axios";
 import "./RegistroUsuario.css";
 
 class LoginUsuario extends Component {
@@ -22,33 +23,28 @@ class LoginUsuario extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-
     const { User, Password } = this.state;
 
     try {
-      const res = await fetch("http://localhost:3000/api/usuario/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ User, Password }),
+      const res = await axios.post("http://localhost:3000/api/usuario/login", {
+        User,
+        Password,
       });
 
-      if (res.ok) {
-        const data = await res.json();
-        localStorage.setItem("token", data.token);
-        this.setState({
-          mensaje: "Inicio de sesión exitoso",
-          error: false,
-          redirect: true,
-        });
-      } else {
-        const error = await res.text();
-        this.setState({ mensaje: `Error: ${error}`, error: true });
-      }
+      localStorage.setItem("token", res.data.token);
+
+      this.setState({
+        mensaje: "Inicio de sesión exitoso",
+        error: false,
+        redirect: true,
+      });
     } catch (err) {
-      console.error(err);
-      this.setState({ mensaje: "Error de red o servidor", error: true });
+      const mensaje =
+        err.response?.data || "Error de red o servidor";
+      this.setState({
+        mensaje: `Error: ${mensaje}`,
+        error: true,
+      });
     }
   };
 
@@ -56,8 +52,7 @@ class LoginUsuario extends Component {
     const { User, Password, mensaje, error, redirect } = this.state;
 
     if (redirect) {
-      // Redirige a la ruta principal o dashboard luego del login
-      return <Navigate to="/" />;
+      return <Navigate to="/home" replace />;
     }
 
     return (
@@ -86,13 +81,15 @@ class LoginUsuario extends Component {
               className="input"
             />
           </div>
-          <button type="submit" className="button">
-            Ingresar
-          </button>
+          <button type="submit" className="button">Ingresar</button>
         </form>
+
         {mensaje && (
-          <p className={error ? "message-error" : "message-success"}>{mensaje}</p>
+          <p className={error ? "message-error" : "message-success"}>
+            {mensaje}
+          </p>
         )}
+
         <p>
           ¿No tenés cuenta? <Link to="/registro">Registrarse</Link>
         </p>
