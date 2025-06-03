@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import "./Formulario.css";
+import "./RegistroUsuario.css";
 
 class LoginUsuario extends Component {
   constructor(props) {
