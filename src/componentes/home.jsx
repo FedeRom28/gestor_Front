@@ -58,7 +58,7 @@ class Home extends Component {
 
         <FormularioTarea onTareaCreada={this.agregarTarea} />
         {error && <p style={{ color: "red" }}>{error}</p>}
-        <ListaTarea tareas={tareas} />
+        <ListaTarea tareas={tareas} onActualizarTarea={this.cargarTareas} />
       </div>
     );
   }
