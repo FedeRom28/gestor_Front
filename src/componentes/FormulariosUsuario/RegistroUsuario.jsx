@@ -12,13 +12,6 @@ class RegistroUsuario extends Component {
     };
   }
 
-    componentDidMount() {
-    // Usar la función pasada desde App
-    if (this.props.verificarToken()) {
-        window.location.href = "/inicio";
-    }
-    }
-
   handleChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };

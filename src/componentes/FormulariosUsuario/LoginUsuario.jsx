@@ -1,4 +1,3 @@
-// LoginUsuario.jsx
 import React, { Component } from "react";
 import axios from "axios";
 
@@ -11,13 +10,6 @@ class LoginUsuario extends Component {
       mensaje: "",
       error: "",
     };
-  }
-
-  componentDidMount() {
-    // Usar la función pasada desde App
-    if (this.props.verificarToken()) {
-      window.location.href = "/inicio";
-    }
   }
 
   handleChange = (e) => {
@@ -38,9 +30,6 @@ class LoginUsuario extends Component {
       localStorage.setItem("token", response.data.token);
 
       this.setState({ mensaje: response.data.mensaje, error: "" });
-
-      // Redirigir a /inicio después del login
-      window.location.href = "/inicio";
     } catch (err) {
       this.setState({
         error: err.response?.data || "Error al iniciar sesión",
