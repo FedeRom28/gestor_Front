@@ -1,7 +1,42 @@
+// Inicio.jsx
 import React, { Component } from "react";
 import CrearTarea from "./CrearTarea";
+import * as jwt_decode from "jwt-decode";
 
 class Inicio extends Component {
+  componentDidMount() {
+    this.verificarToken();
+  }
+
+  verificarToken = () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      // No hay token
+      console.log("No hay token, redirigiendo a /login");
+      window.location.href = "/login";
+      return;
+    }
+
+    try {
+      const decoded = jwt_decode(token);
+      const ahora = Date.now() / 1000; // tiempo en segundos
+
+      if (decoded.exp < ahora) {
+        // Token expirado
+        console.log("Token expirado, redirigiendo a /login");
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+      } else {
+        console.log("Token válido");
+      }
+    } catch (error) {
+      console.log("Token inválido, redirigiendo a /login");
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
+  };
+
   render() {
     return (
       <div>

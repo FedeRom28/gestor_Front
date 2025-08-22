@@ -1,6 +1,6 @@
-// LoginUsuario.jsx
 import React, { Component } from "react";
 import axios from "axios";
+import * as jwt_decode from "jwt-decode";
 
 class LoginUsuario extends Component {
   constructor(props) {
@@ -11,6 +11,27 @@ class LoginUsuario extends Component {
       mensaje: "",
       error: "",
     };
+  }
+
+  componentDidMount() {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      try {
+        const decoded = jwt_decode(token);
+        const ahora = Date.now() / 1000;
+        if (decoded.exp > ahora) {
+          console.log("Token válido, redirigiendo a /inicio");
+          window.location.href = "/inicio";
+        } else {
+          console.log("Token expirado, borrando token");
+          localStorage.removeItem("token");
+        }
+      } catch (err) {
+        console.log("Token inválido, borrando token");
+        localStorage.removeItem("token");
+      }
+    }
   }
 
   handleChange = (e) => {
@@ -27,12 +48,7 @@ class LoginUsuario extends Component {
         Password,
       });
 
-      // Guardar token en localStorage
       localStorage.setItem("token", response.data.token);
-
-      this.setState({ mensaje: response.data.mensaje, error: "" });
-
-      // Redirigir a /inicio
       window.location.href = "/inicio";
     } catch (err) {
       this.setState({
@@ -73,6 +89,9 @@ class LoginUsuario extends Component {
           </div>
           <button type="submit">Iniciar Sesión</button>
         </form>
+        <p>
+          No tenes cuenta? <a href="/registro">Registrarme</a>
+        </p>
       </div>
     );
   }

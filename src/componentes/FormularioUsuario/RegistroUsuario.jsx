@@ -13,6 +13,17 @@ class RegistroUsuario extends Component {
     };
   }
 
+  componentDidMount() {
+    const token = localStorage.getItem("token");
+    if (token) {
+      console.log("Token encontrado:", token);
+      // Redirige a /inicio si hay token
+      window.location.href = "/inicio";
+    } else {
+      console.log("No hay token en localStorage");
+    }
+  }
+
   handleChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -27,10 +38,10 @@ class RegistroUsuario extends Component {
     }
 
     try {
-      const response = await axios.post("http://localhost:3000/api/usuario/registro", {
-        User,
-        Password,
-      });
+      const response = await axios.post(
+        "http://localhost:3000/api/usuario/registro",
+        { User, Password }
+      );
 
       this.setState({ mensaje: response.data.mensaje, error: "" });
     } catch (err) {
@@ -72,6 +83,9 @@ class RegistroUsuario extends Component {
           </div>
           <button type="submit">Registrarse</button>
         </form>
+        <p>
+          Ya tenes tu cuenta? <a href="/login">Iniciar sesion</a>
+        </p>
       </div>
     );
   }
