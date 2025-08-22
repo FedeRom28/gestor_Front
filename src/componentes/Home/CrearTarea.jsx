@@ -1,7 +1,7 @@
 // CrearTarea.jsx
 import React, { Component } from "react";
 import axios from "axios";
-import { withAuth } from "../middlewares/auth"; // si querés usar protección por componente
+import { withAuth } from "../middlewares/autenticar"; // si querés usar protección por componente
 
 class CrearTarea extends Component {
   constructor(props) {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { withAuth } from "../middlewares/auth"; // importa tu HOC
+import { withAuth } from "../middlewares/autenticar"; // importa tu HOC
 
 class ListaTareas extends Component {
   constructor(props) {
