@@ -21,14 +21,14 @@ class LoginUsuario extends Component {
         const decoded = jwt_decode(token);
         const ahora = Date.now() / 1000;
         if (decoded.exp > ahora) {
-          console.log("Token válido, redirigiendo a /inicio");
+          console.log("Token válido al montar componente:", decoded);
           window.location.href = "/inicio";
         } else {
           console.log("Token expirado, borrando token");
           localStorage.removeItem("token");
         }
       } catch (err) {
-        console.log("Token inválido, borrando token");
+        console.log("Token inválido, borrando token", err);
         localStorage.removeItem("token");
       }
     }
@@ -48,9 +48,16 @@ class LoginUsuario extends Component {
         Password,
       });
 
-      localStorage.setItem("token", response.data.token);
+      const token = response.data.token;
+      localStorage.setItem("token", token);
+
+      // Decodificar token para ver los datos
+      const decoded = jwt_decode.default ? jwt_decode.default(token) : jwt_decode(token);
+      console.log("Token recibido y decodificado:", decoded);
+
       window.location.href = "/inicio";
     } catch (err) {
+      console.error("Error de login:", err.response || err.message);
       this.setState({
         error: err.response?.data || "Error al iniciar sesión",
         mensaje: "",
