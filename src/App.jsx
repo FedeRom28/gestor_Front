@@ -37,7 +37,7 @@ class App extends Component {
             }
           />
           <Route
-            path="/inicio"
+            path="/inicios"
             element={
               this.verificarToken() ? (
                 <Inicio verificarToken={this.verificarToken} />
