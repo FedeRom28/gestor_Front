@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import CrearTarea from "./CrearTarea";
-import * as jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // ✅ Import correcto
 
 class Inicio extends Component {
   componentDidMount() {
@@ -17,7 +17,7 @@ class Inicio extends Component {
     }
 
     try {
-      const decoded = jwt_decode.default ? jwt_decode.default(token) : jwt_decode(token);
+      const decoded = jwtDecode(token); // ✅ uso correcto
       const ahora = Date.now() / 1000; // tiempo en segundos
 
       if (decoded.exp < ahora) {
