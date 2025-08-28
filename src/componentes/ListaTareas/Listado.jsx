@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { eliminarTarea } from "../utiles/eliminarTarea"; // ✅ función reutilizable
 
 class Listado extends Component {
   cambiarEstado = async (tarea) => {
@@ -19,7 +20,7 @@ class Listado extends Component {
 
       console.log("✅ Estado cambiado en backend");
 
-      // 🔄 Avisamos al padre que recargue las tareas completas
+      // 🔄 Avisamos al padre que recargue
       if (this.props.onEstadoActualizado) {
         this.props.onEstadoActualizado();
       }
@@ -28,14 +29,26 @@ class Listado extends Component {
     }
   };
 
+  eliminar = async (id) => {
+    try {
+      await eliminarTarea(id); // ✅ usamos la función reutilizable
+      console.log(`🗑️ Tarea ${id} eliminada`);
+
+      if (this.props.onEstadoActualizado) {
+        this.props.onEstadoActualizado();
+      }
+    } catch (error) {
+      console.error("❌ Error al eliminar tarea:", error);
+    }
+  };
+
   render() {
     const { tareas, error } = this.props;
 
     // 🔀 Ordenar tareas: urgentes primero
     const tareasOrdenadas = [...tareas].sort((a, b) => {
-      // si tienen campo Urgencia (1 = urgente, 0 = no urgente)
       if (a.Urgencia === b.Urgencia) return 0;
-      return b.Urgencia - a.Urgencia; 
+      return b.Urgencia - a.Urgencia;
     });
 
     return (
@@ -74,6 +87,16 @@ class Listado extends Component {
                       {tarea.Estado === 0
                         ? "Marcar como completada"
                         : "Marcar como pendiente"}
+                    </button>
+                    <button
+                      onClick={() =>
+                        window.confirm("¿Seguro que quieres eliminar esta tarea?")
+                          ? this.eliminar(tarea.ID)
+                          : null
+                      }
+                      style={{ marginLeft: "10px", color: "red" }}
+                    >
+                      Eliminar 🗑️
                     </button>
                   </td>
                 </tr>
