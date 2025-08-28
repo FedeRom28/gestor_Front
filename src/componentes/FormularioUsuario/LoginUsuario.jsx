@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import jwtDecode from "jwt-decode"; // ✅ Import correcto
+import { jwtDecode } from "jwt-decode"; // ✅ Import nombrado
 
 class LoginUsuario extends Component {
   constructor(props) {
