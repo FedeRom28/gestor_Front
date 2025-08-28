@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import * as jwt_decode from "jwt-decode";
+import jwtDecode from "jwt-decode"; // ✅ Import correcto
 
 class LoginUsuario extends Component {
   constructor(props) {
@@ -18,7 +18,7 @@ class LoginUsuario extends Component {
 
     if (token) {
       try {
-        const decoded = jwt_decode(token);
+        const decoded = jwtDecode(token); // ✅ uso correcto
         const ahora = Date.now() / 1000;
         if (decoded.exp > ahora) {
           console.log("Token válido al montar componente:", decoded);
@@ -51,8 +51,8 @@ class LoginUsuario extends Component {
       const token = response.data.token;
       localStorage.setItem("token", token);
 
-      // Decodificar token para ver los datos
-      const decoded = jwt_decode.default ? jwt_decode.default(token) : jwt_decode(token);
+      // ✅ Decodificar token
+      const decoded = jwtDecode(token);
       console.log("Token recibido y decodificado:", decoded);
 
       window.location.href = "/inicio";
