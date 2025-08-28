@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode"; // ✅ Import nombrado
+import Header from "../header"; 
 
 class LoginUsuario extends Component {
   constructor(props) {
@@ -18,7 +19,7 @@ class LoginUsuario extends Component {
 
     if (token) {
       try {
-        const decoded = jwtDecode(token); // ✅ uso correcto
+        const decoded = jwtDecode(token);
         const ahora = Date.now() / 1000;
         if (decoded.exp > ahora) {
           console.log("Token válido al montar componente:", decoded);
@@ -51,7 +52,6 @@ class LoginUsuario extends Component {
       const token = response.data.token;
       localStorage.setItem("token", token);
 
-      // ✅ Decodificar token
       const decoded = jwtDecode(token);
       console.log("Token recibido y decodificado:", decoded);
 
@@ -70,35 +70,38 @@ class LoginUsuario extends Component {
 
     return (
       <div>
-        <h2>Login de Usuario</h2>
-        {mensaje && <p style={{ color: "green" }}>{mensaje}</p>}
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <form onSubmit={this.handleSubmit}>
-          <div>
-            <label>Usuario:</label>
-            <input
-              type="text"
-              name="User"
-              value={User}
-              onChange={this.handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label>Contraseña:</label>
-            <input
-              type="password"
-              name="Password"
-              value={Password}
-              onChange={this.handleChange}
-              required
-            />
-          </div>
-          <button type="submit">Iniciar Sesión</button>
-        </form>
-        <p>
-          No tenes cuenta? <a href="/registro">Registrarme</a>
-        </p>
+        <Header /> {/* ✅ Header en la parte superior */}
+        <div style={{ padding: "20px" }}>
+          <h2>Login de Usuario</h2>
+          {mensaje && <p style={{ color: "green" }}>{mensaje}</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          <form onSubmit={this.handleSubmit}>
+            <div>
+              <label>Usuario:</label>
+              <input
+                type="text"
+                name="User"
+                value={User}
+                onChange={this.handleChange}
+                required
+              />
+            </div>
+            <div>
+              <label>Contraseña:</label>
+              <input
+                type="password"
+                name="Password"
+                value={Password}
+                onChange={this.handleChange}
+                required
+              />
+            </div>
+            <button type="submit">Iniciar Sesión</button>
+          </form>
+          <p>
+            No tenes cuenta? <a href="/registro">Registrarme</a>
+          </p>
+        </div>
       </div>
     );
   }

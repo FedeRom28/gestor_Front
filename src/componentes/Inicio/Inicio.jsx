@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import CrearTarea from "./CrearTarea";
-import { jwtDecode } from "jwt-decode"; // ✅ Import correcto
+import Header from "../header";
+import { jwtDecode } from "jwt-decode";
 
 class Inicio extends Component {
   componentDidMount() {
@@ -17,15 +18,13 @@ class Inicio extends Component {
     }
 
     try {
-      const decoded = jwtDecode(token); // ✅ uso correcto
-      const ahora = Date.now() / 1000; // tiempo en segundos
+      const decoded = jwtDecode(token);
+      const ahora = Date.now() / 1000;
 
       if (decoded.exp < ahora) {
         console.log("Token expirado, redirigiendo a /login");
         localStorage.removeItem("token");
         window.location.href = "/login";
-      } else {
-        console.log("Token válido:", decoded);
       }
     } catch (error) {
       console.log("Token inválido, redirigiendo a /login");
@@ -37,6 +36,7 @@ class Inicio extends Component {
   render() {
     return (
       <div>
+        <Header /> {/* ✅ aparece en todas las páginas */}
         <h1>Inicio</h1>
         <CrearTarea />
       </div>

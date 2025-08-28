@@ -1,6 +1,6 @@
-// RegistroUsuario.jsx
 import React, { Component } from "react";
 import axios from "axios";
+import Header from "../header";
 
 class RegistroUsuario extends Component {
   constructor(props) {
@@ -17,8 +17,7 @@ class RegistroUsuario extends Component {
     const token = localStorage.getItem("token");
     if (token) {
       console.log("Token encontrado:", token);
-      // Redirige a /inicio si hay token
-      window.location.href = "/inicio";
+      window.location.href = "/inicio"; // Redirige si ya hay token
     } else {
       console.log("No hay token en localStorage");
     }
@@ -43,7 +42,14 @@ class RegistroUsuario extends Component {
         { User, Password }
       );
 
+      // Mostramos mensaje de éxito
       this.setState({ mensaje: response.data.mensaje, error: "" });
+
+      // Redirigir a /login después de 1 segundo
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 1000);
+
     } catch (err) {
       this.setState({
         error: err.response?.data || "Error al registrar usuario",
@@ -57,35 +63,38 @@ class RegistroUsuario extends Component {
 
     return (
       <div>
-        <h2>Registro de Usuario</h2>
-        {mensaje && <p style={{ color: "green" }}>{mensaje}</p>}
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <form onSubmit={this.handleSubmit}>
-          <div>
-            <label>Usuario:</label>
-            <input
-              type="text"
-              name="User"
-              value={User}
-              onChange={this.handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label>Contraseña:</label>
-            <input
-              type="password"
-              name="Password"
-              value={Password}
-              onChange={this.handleChange}
-              required
-            />
-          </div>
-          <button type="submit">Registrarse</button>
-        </form>
-        <p>
-          Ya tenes tu cuenta? <a href="/login">Iniciar sesion</a>
-        </p>
+        <Header /> {/* ✅ Header en la parte superior */}
+        <div style={{ padding: "20px" }}>
+          <h2>Registro de Usuario</h2>
+          {mensaje && <p style={{ color: "green" }}>{mensaje}</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          <form onSubmit={this.handleSubmit}>
+            <div>
+              <label>Usuario:</label>
+              <input
+                type="text"
+                name="User"
+                value={User}
+                onChange={this.handleChange}
+                required
+              />
+            </div>
+            <div>
+              <label>Contraseña:</label>
+              <input
+                type="password"
+                name="Password"
+                value={Password}
+                onChange={this.handleChange}
+                required
+              />
+            </div>
+            <button type="submit">Registrarse</button>
+          </form>
+          <p>
+            Ya tenes tu cuenta? <a href="/login">Iniciar sesión</a>
+          </p>
+        </div>
       </div>
     );
   }
