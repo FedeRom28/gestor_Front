@@ -43,8 +43,11 @@ class ListadoCompletadas extends Component {
     const { tareas, error } = this.state;
 
     return (
+      <div>
+      <Header/>
       <div style={{ padding: "20px" }}>
         <h2>Tareas Completadas</h2>
+        <a href="/inicio">volver a inicio</a>
         {error && <p style={{ color: "red" }}>{error}</p>}
         {tareas.length === 0 ? (
           <p>No hay tareas completadas.</p>
@@ -72,6 +75,7 @@ class ListadoCompletadas extends Component {
             </tbody>
           </table>
         )}
+      </div>
       </div>
     );
   }

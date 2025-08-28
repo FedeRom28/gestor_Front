@@ -1,4 +1,3 @@
-// ListarTareas.jsx
 import React, { Component } from "react";
 import axios from "axios";
 
@@ -32,12 +31,19 @@ class Listado extends Component {
   render() {
     const { tareas, error } = this.props;
 
+    // 🔀 Ordenar tareas: urgentes primero
+    const tareasOrdenadas = [...tareas].sort((a, b) => {
+      // si tienen campo Urgencia (1 = urgente, 0 = no urgente)
+      if (a.Urgencia === b.Urgencia) return 0;
+      return b.Urgencia - a.Urgencia; 
+    });
+
     return (
       <div style={{ padding: "20px" }}>
         <h2>Mis Tareas</h2>
         <a href="/listar-tareas-completas">ver mis tareas hechas</a>
         {error && <p style={{ color: "red" }}>{error}</p>}
-        {tareas.length === 0 ? (
+        {tareasOrdenadas.length === 0 ? (
           <p>No tienes tareas aún.</p>
         ) : (
           <table
@@ -51,16 +57,18 @@ class Listado extends Component {
                 <th>Descripción</th>
                 <th>Estado</th>
                 <th>Categoría</th>
+                <th>Urgencia</th>
                 <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
-              {tareas.map((tarea) => (
+              {tareasOrdenadas.map((tarea) => (
                 <tr key={tarea.ID}>
                   <td>{tarea.Titulo}</td>
                   <td>{tarea.Descripcion}</td>
                   <td>{tarea.Estado === 1 ? "Completada" : "Pendiente"}</td>
                   <td>{tarea.Categoria || "Sin categoría"}</td>
+                  <td>{tarea.Urgencia === 1 ? "Urgente 🚨" : "Normal"}</td>
                   <td>
                     <button onClick={() => this.cambiarEstado(tarea)}>
                       {tarea.Estado === 0
