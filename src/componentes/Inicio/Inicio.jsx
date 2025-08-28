@@ -43,14 +43,14 @@ class Inicio extends Component {
         headers: { Authorization: `Bearer ${token}` },
       });
       this.setState({ tareas: response.data });
-      console.log("que llega", response.data)
+      console.log("📥 Tareas recibidas:", response.data);
     } catch (error) {
-      console.error("Error al cargar tareas:", error);
+      console.error("❌ Error al cargar tareas:", error);
     }
   };
 
   agregarTarea = (nuevaTarea) => {
-    // Se agrega la tarea nueva al final del estado
+    // Igual que antes, agregamos la tarea nueva sin esperar al backend
     this.setState((prevState) => ({
       tareas: [...prevState.tareas, nuevaTarea],
     }));
@@ -63,8 +63,11 @@ class Inicio extends Component {
         <h1>Inicio</h1>
         {/* Pasamos la función agregarTarea como prop */}
         <CrearTarea onTareaCreada={this.agregarTarea} />
-        {/* Listado recibe las tareas del estado */}
-        <Listado tareas={this.state.tareas} />
+        {/* Listado recibe las tareas y la función para recargar */}
+        <Listado
+          tareas={this.state.tareas}
+          onEstadoActualizado={this.cargarTareas} // 👈 ahora recarga desde backend
+        />
       </div>
     );
   }
