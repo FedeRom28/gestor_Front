@@ -1,72 +1,65 @@
-import React, { Component } from "react";
-import axios from "axios";
-import { eliminarTarea } from "../utiles/eliminarTarea"; // ✅ función reutilizable
+import React from "react"
+import "./Listado.css"
+import { Component } from "react"
+import axios from "axios"
 
 class Listado extends Component {
-  cambiarEstado = async (tarea) => {
+  cambiarEstado = async (tareaId, nuevoEstado) => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("No hay token");
-
-      const nuevoEstado = tarea.Estado === 0 ? 1 : 0;
-
-      console.log(`📡 Cambiando estado de tarea ${tarea.ID} a:`, nuevoEstado);
-
-      await axios.patch(
-        `http://localhost:3000/api/tareas/cambiarEstado/${tarea.ID}`,
+      const token = localStorage.getItem("token")
+      await axios.put(
+        `http://localhost:3000/api/tareas/actualizarEstado/${tareaId}`,
         { Estado: nuevoEstado },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+        { headers: { Authorization: `Bearer ${token}` } },
+      )
 
-      console.log("✅ Estado cambiado en backend");
-
-      // 🔄 Avisamos al padre que recargue
-      if (this.props.onEstadoActualizado) {
-        this.props.onEstadoActualizado();
-      }
+      // Notificar al componente padre para recargar las tareas
+      this.props.onEstadoActualizado()
     } catch (error) {
-      console.error("❌ Error al cambiar estado:", error);
+      console.error("Error al cambiar estado:", error)
     }
-  };
+  }
 
-  eliminar = async (id) => {
+  eliminarTarea = async (tareaId) => {
     try {
-      await eliminarTarea(id); // ✅ usamos la función reutilizable
-      console.log(`🗑️ Tarea ${id} eliminada`);
+      const token = localStorage.getItem("token")
+      await axios.delete(`http://localhost:3000/api/tareas/eliminarTarea/${tareaId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
 
-      if (this.props.onEstadoActualizado) {
-        this.props.onEstadoActualizado();
-      }
+      // Notificar al componente padre para recargar las tareas
+      this.props.onEstadoActualizado()
     } catch (error) {
-      console.error("❌ Error al eliminar tarea:", error);
+      console.error("Error al eliminar tarea:", error)
     }
-  };
+  }
 
   render() {
-    const { tareas, error } = this.props;
+    const { tareas, error } = this.props
 
-    // 🔀 Ordenar tareas: urgentes primero
     const tareasOrdenadas = [...tareas].sort((a, b) => {
-      if (a.Urgencia === b.Urgencia) return 0;
-      return b.Urgencia - a.Urgencia;
-    });
+      if (a.Urgencia === b.Urgencia) return 0
+      return b.Urgencia - a.Urgencia
+    })
 
     return (
-      <div style={{ padding: "20px" }}>
-        <h2>Mis Tareas</h2>
-        <a href="/listar-tareas-completas">ver mis tareas hechas</a>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+      <div className="listado-container">
+        <div className="listado-header">
+          <h2 className="listado-title">Mis Tareas</h2>
+          <a href="/listar-tareas-completas" className="ver-completadas-link">
+            ver mis tareas hechas
+          </a>
+        </div>
+
+        {error && <p className="error-message">{error}</p>}
+
         {tareasOrdenadas.length === 0 ? (
-          <p>No tienes tareas aún.</p>
+          <p className="no-tareas-message">No tienes tareas aún.</p>
         ) : (
-          <table
-            border="1"
-            cellPadding="10"
-            style={{ width: "100%", borderCollapse: "collapse" }}
-          >
+          <table className="tareas-table">
             <thead>
               <tr>
-                <th>Titulo</th>
+                <th>Título</th>
                 <th>Descripción</th>
                 <th>Estado</th>
                 <th>Categoría</th>
@@ -77,24 +70,31 @@ class Listado extends Component {
             <tbody>
               {tareasOrdenadas.map((tarea) => (
                 <tr key={tarea.ID}>
-                  <td>{tarea.Titulo}</td>
-                  <td>{tarea.Descripcion}</td>
-                  <td>{tarea.Estado === 1 ? "Completada" : "Pendiente"}</td>
-                  <td>{tarea.Categoria || "Sin categoría"}</td>
-                  <td>{tarea.Urgencia === 1 ? "Urgente 🚨" : "Normal"}</td>
-                  <td>
-                    <button onClick={() => this.cambiarEstado(tarea)}>
-                      {tarea.Estado === 0
-                        ? "Marcar como completada"
-                        : "Marcar como pendiente"}
+                  <td className="titulo-cell">{tarea.Titulo}</td>
+                  <td className="descripcion-cell">{tarea.Descripcion}</td>
+                  <td className="estado-cell">
+                    <span className={tarea.Estado === 1 ? "estado-completada" : "estado-pendiente"}>
+                      {tarea.Estado === 1 ? "Completada" : "Pendiente"}
+                    </span>
+                  </td>
+                  <td className="categoria-cell">{tarea.Categoria || "Sin categoría"}</td>
+                  <td className="urgencia-cell">
+                    <span className={tarea.Urgencia === 1 ? "urgencia-urgente" : "urgencia-normal"}>
+                      {tarea.Urgencia === 1 ? "Urgente 🚨" : "Normal"}
+                    </span>
+                  </td>
+                  <td className="acciones-cell">
+                    <button
+                      className="btn-estado"
+                      onClick={() => this.cambiarEstado(tarea.ID, tarea.Estado === 0 ? 1 : 0)}
+                    >
+                      {tarea.Estado === 0 ? "Completar" : "Descompletar"}
                     </button>
                     <button
+                      className="btn-eliminar"
                       onClick={() =>
-                        window.confirm("¿Seguro que quieres eliminar esta tarea?")
-                          ? this.eliminar(tarea.ID)
-                          : null
+                        window.confirm("¿Seguro que quieres eliminar esta tarea?") ? this.eliminarTarea(tarea.ID) : null
                       }
-                      style={{ marginLeft: "10px", color: "red" }}
                     >
                       Eliminar 🗑️
                     </button>
@@ -105,8 +105,8 @@ class Listado extends Component {
           </table>
         )}
       </div>
-    );
+    )
   }
 }
 
-export default Listado;
+export default Listado

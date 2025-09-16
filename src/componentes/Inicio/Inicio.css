@@ -1,0 +1,88 @@
+/* Estilos para el componente Inicio */
+.inicio-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.inicio-title {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+
+/* Sección del formulario - arriba */
+.formulario-section {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+}
+
+.formulario-title {
+  color: #495057;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: 500;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
+}
+
+/* Sección del listado - abajo */
+.listado-section {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+  min-height: 400px;
+}
+
+.listado-title {
+  color: #495057;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: 500;
+  border-bottom: 2px solid #28a745;
+  padding-bottom: 10px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .inicio-container {
+    padding: 15px;
+  }
+
+  .formulario-section,
+  .listado-section {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .inicio-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+
+  .formulario-title,
+  .listado-title {
+    font-size: 1.3rem;
+  }
+}
+
+/* Animaciones suaves */
+.formulario-section,
+.listado-section {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.formulario-section:hover,
+.listado-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
