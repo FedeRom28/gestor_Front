@@ -1,8 +1,8 @@
-// ListadoCompletadas.jsx
 import React, { Component } from "react";
 import axios from "axios";
 import Header from "../header";
-import { eliminarTarea } from "../utiles/eliminarTarea"; // ✅ usar el mismo nombre
+import { eliminarTarea } from "../utiles/eliminarTarea";
+import "./TareasListas.css";
 
 class ListadoCompletadas extends Component {
   state = {
@@ -42,8 +42,7 @@ class ListadoCompletadas extends Component {
 
   eliminar = async (id) => {
     try {
-      await eliminarTarea(id); // ✅ usamos la función importada
-      // Actualizamos el estado para quitar la tarea eliminada
+      await eliminarTarea(id);
       this.setState((prevState) => ({
         tareas: prevState.tareas.filter((tarea) => tarea.ID !== id),
       }));
@@ -59,48 +58,68 @@ class ListadoCompletadas extends Component {
     return (
       <div>
         <Header />
-        <div style={{ padding: "20px" }}>
-          <h2>Tareas Completadas</h2>
-          <a href="/inicio">volver a inicio</a>
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          {tareas.length === 0 ? (
-            <p>No hay tareas completadas.</p>
-          ) : (
-            <table border="1" cellPadding="10" style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr>
-                  <th>Titulo</th>
-                  <th>Descripción</th>
-                  <th>Estado</th>
-                  <th>Categoría</th>
-                  <th>Última actualización</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tareas.map((tarea) => (
-                  <tr key={tarea.ID}>
-                    <td>{tarea.Titulo}</td>
-                    <td>{tarea.Descripcion}</td>
-                    <td>{tarea.Estado === 1 ? "Completada" : "Pendiente"}</td>
-                    <td>{tarea.Categoria || "Sin categoría"}</td>
-                    <td>{new Date(tarea.Fecha_Cambio).toLocaleString()}</td>
-                    <td>
-                      <button
-                        onClick={() =>
-                          window.confirm("¿Seguro que quieres eliminar esta tarea?") &&
-                          this.eliminar(tarea.ID)
-                        }
-                        style={{ color: "red" }}
-                      >
-                        Eliminar 🗑️
-                      </button>
-                    </td>
+        <div className="tareasListas-container">
+          <div className="tareasListas-content">
+            <h2 className="tareasListas-title">Tareas Completadas</h2>
+            <a href="/inicio" className="tareasListas-back-link">
+              ⬅ Volver al inicio
+            </a>
+
+            {error && <div className="tareasListas-error">{error}</div>}
+
+            {tareas.length === 0 ? (
+              <div className="tareasListas-empty">No hay tareas completadas.</div>
+            ) : (
+              <table className="tareasListas-table">
+                <thead>
+                  <tr>
+                    <th>Título</th>
+                    <th>Descripción</th>
+                    <th>Estado</th>
+                    <th>Categoría</th>
+                    <th>Última actualización</th>
+                    <th>Acciones</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+                </thead>
+                <tbody>
+                  {tareas.map((tarea) => (
+                    <tr key={tarea.ID}>
+                      <td>{tarea.Titulo}</td>
+                      <td>{tarea.Descripcion}</td>
+                      <td>
+                        {tarea.Estado === 1 ? (
+                          <span className="tareasListas-estado-completada">Completada</span>
+                        ) : (
+                          <span className="tareasListas-estado-pendiente">Pendiente</span>
+                        )}
+                      </td>
+                      <td>
+                        {tarea.Categoria ? (
+                          <span className="tareasListas-categoria">{tarea.Categoria}</span>
+                        ) : (
+                          "Sin categoría"
+                        )}
+                      </td>
+                      <td className="tareasListas-fecha">
+                        {new Date(tarea.Fecha_Cambio).toLocaleString()}
+                      </td>
+                      <td>
+                        <button
+                          className="tareasListas-delete-btn"
+                          onClick={() =>
+                            window.confirm("¿Seguro que quieres eliminar esta tarea?") &&
+                            this.eliminar(tarea.ID)
+                          }
+                        >
+                          Eliminar 🗑️
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
         </div>
       </div>
     );
