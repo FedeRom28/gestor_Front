@@ -7,16 +7,25 @@ class Listado extends Component {
   cambiarEstado = async (tareaId, nuevoEstado) => {
     try {
       const token = localStorage.getItem("token")
-      await axios.put(
+
+      // Log del cambio de estado
+      console.log(
+        `Cambiando estado de la tarea ${tareaId} a: ${nuevoEstado === 1 ? "Completada ✅" : "Pendiente ⏳"}`
+      )
+
+      await axios.patch(
         `http://localhost:3000/api/tareas/actualizarEstado/${tareaId}`,
         { Estado: nuevoEstado },
-        { headers: { Authorization: `Bearer ${token}` } },
+        { headers: { Authorization: `Bearer ${token}` } }
       )
 
       // Notificar al componente padre para recargar las tareas
       this.props.onEstadoActualizado()
+
+      // Log de confirmación
+      console.log(`✅ Estado de la tarea ${tareaId} actualizado con éxito.`)
     } catch (error) {
-      console.error("Error al cambiar estado:", error)
+      console.error("❌ Error al cambiar estado:", error)
     }
   }
 
